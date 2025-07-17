@@ -4,6 +4,7 @@ import Service.EventService;
 import Service.UserService;
 import Util.FileManager;
 import Util.InputHandler;
+import Factory.AppFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,34 +14,30 @@ public class App {
     private final InputHandler inputHandler;
     private final UserController userController;
     private final UsersController usersController;
-    private final UserService userService;
-    private final EventService eventService;
     private final EventController eventController;
     private final EventsController eventsController;
     private final Menu mainMenu;
 
     public App() {
-        this.inputHandler = new InputHandler();
-        this.eventService = new EventService();
-        this.userService = new UserService();
+        AppFactory factory = new AppFactory();
 
-        this.mainMenu = new Menu();
-        this.menuController = new MenuController(mainMenu);
-        this.userController = new UserController(userService, inputHandler);
-        this.usersController = new UsersController(userService);
-        this.eventController = new EventController(eventService, inputHandler);
-        this.eventsController = new EventsController(eventService);
+        this.inputHandler = factory.getInputHandler();
+        this.mainMenu = factory.getMainMenu();
+        this.menuController = factory.createMenuController();
+        this.userController = factory.createUserController();
+        this.usersController = factory.createUsersController();
+        this.eventController = factory.createEventController();
+        this.eventsController = factory.createEventsController();
     }
 
-    public void execute() {
+    public void runApp() {
         createRequiredFiles();
         eventsController.listEvents();
 
         int option;
         do {
-            mainMenu.initializeMainOptions(); // Menu principal
-            menuController.setMenu(mainMenu); // ESSENCIAL: redefine menu principal
-
+            mainMenu.initializeMainOptions();
+            menuController.setMenu(mainMenu);
             menuController.listMenu();
             option = inputHandler.requestOptionMenu();
             processOption(option);
@@ -73,14 +70,13 @@ public class App {
     private void submenuUsuarios() {
         Menu menuUsuario = new Menu();
         int opcaoUsuario;
-
         do {
             menuUsuario.initializeUserOptions();
-            menuController.setMenu(menuUsuario); // trocar menu do controller
+            menuController.setMenu(menuUsuario);
             menuController.listMenu();
             opcaoUsuario = inputHandler.requestOptionMenu();
 
-            switch (opcaoUsuario) { // Essa sintaxe SWITCH é mais recente e se refere ao Java de versões iguais ou superiores a 17
+            switch (opcaoUsuario) {
                 case 1 -> userController.registerUser(inputHandler.requestUser());
                 case 2 -> userController.handleEditUser();
                 case 3 -> eventController.handleAddParticipant();
@@ -97,7 +93,6 @@ public class App {
     private void submenuEventos() {
         Menu menuEvento = new Menu();
         int opcaoEvento;
-
         do {
             menuEvento.initializeEventOptions();
             menuController.setMenu(menuEvento);

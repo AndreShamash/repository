@@ -32,9 +32,11 @@ public class EventsController {
 
         System.out.printf("%nHá %d evento%s %s na sua região:%n%n", quantidade, plural, verbo);
 
-        // Ordena por data
+        // Ordena por data e hora
         List<Event> eventosOrdenados = events.getEvents().stream()
-                .sorted(Comparator.comparing(event -> LocalDate.parse(event.getDate())))
+                .sorted(Comparator
+                        .comparing(Event::getDate)
+                        .thenComparing(Event::getTime))
                 .toList();
 
         for (Event event : eventosOrdenados) {
