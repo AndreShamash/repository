@@ -15,24 +15,44 @@ public class Menu {
      */
     public Menu() {
         options = new LinkedHashMap<>();
-        initializeOptions();
+        //initializeOptions();
     }
 
     /**
      * Inicializa o mapa de opções do menu principal.
      */
-    private void initializeOptions() {
+    public void initializeMainOptions() {
+        options.clear();
+        addOption(1, "Gerenciar os usuários");
+        addOption(2, "Gerenciar os eventos");
+        addOption(0, "Sair do sistema");
+    }
+
+    /**
+     * Inicializa o submenu de usuário.
+     */
+    public void initializeUserOptions() {
+        options.clear();
         addOption(1, "Cadastrar um usuário");
         addOption(2, "Editar um usuário cadastrado");
-        addOption(3, "Cadastrar um evento");
-        addOption(4, "Editar um evento");
-        addOption(5, "Consultar os eventos de sua região");
-        addOption(6, "Participar de um evento");
-        addOption(7, "Editar a participação em um evento / Cancelar evento");
-        addOption(8, "Excluir todos os eventos");
-        addOption(9, "Listar todos os usuários");
-        addOption(10, "Excluir todos os usuários");
-        addOption(0, "Sair do sistema");
+        addOption(3, "Participar de um evento");
+        addOption(4, "Cancelar participação em evento");
+        addOption(5, "Listar todos os usuários");
+        addOption(6, "Excluir todos os usuários");
+        addOption(0, "Voltar ao menu principal");
+    }
+
+    /**
+     * Inicializa o submenu de eventos.
+     */
+    public void initializeEventOptions() {
+        options.clear();
+        addOption(1, "Cadastrar um evento");
+        addOption(2, "Editar um evento");
+        addOption(3, "Cancelar evento");
+        addOption(4, "Consultar eventos da região");
+        addOption(5, "Excluir todos os eventos");
+        addOption(0, "Voltar ao menu principal");
     }
 
     /**

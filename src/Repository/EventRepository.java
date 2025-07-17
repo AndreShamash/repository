@@ -126,7 +126,6 @@ public class EventRepository {
         return null;
     }
 
-
     /**
      * Formata um evento para uma linha do arquivo.
      */
@@ -145,5 +144,4 @@ public class EventRepository {
                 participants
         );
     }
-
 }

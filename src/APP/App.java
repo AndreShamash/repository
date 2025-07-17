@@ -17,13 +17,15 @@ public class App {
     private final EventService eventService;
     private final EventController eventController;
     private final EventsController eventsController;
+    private final Menu mainMenu;
 
     public App() {
         this.inputHandler = new InputHandler();
         this.eventService = new EventService();
         this.userService = new UserService();
 
-        this.menuController = new MenuController(new Menu());
+        this.mainMenu = new Menu();
+        this.menuController = new MenuController(mainMenu);
         this.userController = new UserController(userService, inputHandler);
         this.usersController = new UsersController(userService);
         this.eventController = new EventController(eventService, inputHandler);
@@ -36,6 +38,9 @@ public class App {
 
         int option;
         do {
+            mainMenu.initializeMainOptions(); // Menu principal
+            menuController.setMenu(mainMenu); // ESSENCIAL: redefine menu principal
+
             menuController.listMenu();
             option = inputHandler.requestOptionMenu();
             processOption(option);
@@ -49,37 +54,12 @@ public class App {
     }
 
     private void processOption(int option) {
-        switch (option) {
+        switch (option) { // Essa sintaxe SWITCH é antiga e se refere ao Java de versões inferiores a 14
             case 1:
-                userController.registerUser(inputHandler.requestUser());
+                submenuUsuarios();
                 break;
             case 2:
-                userController.handleEditUser();
-                break;
-            case 3:
-                eventController.registerEvent(inputHandler.requestEvent());
-                break;
-            case 4:
-                eventController.handleEditEvent();
-                break;
-            case 5:
-                eventsController.listEvents();
-
-                break;
-            case 6:
-                eventController.handleAddParticipant();
-                break;
-            case 7:
-                handleEditParticipationOrCancelEvent();
-                break;
-            case 8:
-                handleDeleteAllEventsConfirmation();
-                break;
-            case 9:
-                usersController.listUsers();
-                break;
-            case 10:
-                handleDeleteAllUsersConfirmation();
+                submenuEventos();
                 break;
             case 0:
                 System.out.println("Encerrando o sistema.");
@@ -89,37 +69,50 @@ public class App {
         }
     }
 
-    private void handleEditParticipationOrCancelEvent() {
-        System.out.println("\n--- Editar Participação/Cancelar Evento ---");
-        System.out.println("1 - Cancelar minha participação em um evento");
-        System.out.println("2 - Cancelar um evento (apenas para administradores)");
-        System.out.println("3 - Reativar um evento cancelado (apenas para administradores)");
-        int subOption = inputHandler.requestOptionMenu();
+    // === SUBMENU DE USUÁRIOS ===
+    private void submenuUsuarios() {
+        Menu menuUsuario = new Menu();
+        int opcaoUsuario;
 
-        if (subOption == 1) {
-            eventController.handleRemoveParticipant();
-        } else if (subOption == 2) {
-            eventController.handleCancelEvent();
-        } else if (subOption == 3) {
-            eventController.handleReturnCanceledEvent();
-        } else {
-            System.out.println("Opção inválida.");
-        }
+        do {
+            menuUsuario.initializeUserOptions();
+            menuController.setMenu(menuUsuario); // trocar menu do controller
+            menuController.listMenu();
+            opcaoUsuario = inputHandler.requestOptionMenu();
+
+            switch (opcaoUsuario) { // Essa sintaxe SWITCH é mais recente e se refere ao Java de versões iguais ou superiores a 17
+                case 1 -> userController.registerUser(inputHandler.requestUser());
+                case 2 -> userController.handleEditUser();
+                case 3 -> eventController.handleAddParticipant();
+                case 4 -> eventController.handleRemoveParticipant();
+                case 5 -> usersController.listUsers();
+                case 6 -> userController.handleDeleteAllUsersConfirmation();
+                case 0 -> System.out.println("Voltando ao menu principal...");
+                default -> System.out.println("Opção inválida.");
+            }
+        } while (opcaoUsuario != 0);
     }
 
-    private void handleDeleteAllEventsConfirmation() {
-        if (inputHandler.confirmYesNo("Tem certeza que deseja excluir TODOS os eventos?")) {
-            eventController.deleteAllEvents();
-        } else {
-            System.out.println("Operação cancelada.");
-        }
-    }
+    // === SUBMENU DE EVENTOS ===
+    private void submenuEventos() {
+        Menu menuEvento = new Menu();
+        int opcaoEvento;
 
-    private void handleDeleteAllUsersConfirmation() {
-        if (inputHandler.confirmYesNo("Tem certeza que deseja excluir TODOS os usuários?")) {
-            userController.deleteAllUsers();
-        } else {
-            System.out.println("Operação cancelada.");
-        }
+        do {
+            menuEvento.initializeEventOptions();
+            menuController.setMenu(menuEvento);
+            menuController.listMenu();
+            opcaoEvento = inputHandler.requestOptionMenu();
+
+            switch (opcaoEvento) {
+                case 1 -> eventController.registerEvent(inputHandler.requestEvent());
+                case 2 -> eventController.handleEditEvent();
+                case 3 -> eventController.handleCancelOrRestoreEvent();
+                case 4 -> eventsController.listEvents();
+                case 5 -> eventController.handleDeleteAllEventsConfirmation();
+                case 0 -> System.out.println("Voltando ao menu principal...");
+                default -> System.out.println("Opção inválida.");
+            }
+        } while (opcaoEvento != 0);
     }
 }

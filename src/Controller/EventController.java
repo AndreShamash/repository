@@ -83,4 +83,27 @@ public class EventController {
             System.out.println("Erro: o evento pode não existir, estar concluído ou não estar cancelado.");
         }
     }
+
+    public void handleCancelOrRestoreEvent() {
+        System.out.println("\n--- Cancelar ou Reativar Evento ---");
+        System.out.println("1 - Cancelar evento");
+        System.out.println("2 - Reativar evento");
+        int subOption = inputHandler.requestOptionMenu();
+
+        if (subOption == 1) {
+            handleCancelEvent();
+        } else if (subOption == 2) {
+            handleReturnCanceledEvent();
+        } else {
+            System.out.println("Opção inválida.");
+        }
+    }
+
+    public void handleDeleteAllEventsConfirmation() {
+        if (inputHandler.confirmYesNo("Tem certeza que deseja excluir TODOS os eventos?")) {
+            deleteAllEvents();
+        } else {
+            System.out.println("Operação cancelada.");
+        }
+    }
 }

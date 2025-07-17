@@ -50,4 +50,12 @@ public class UserController {
             System.out.println("Falha ao tentar excluir todos os usuários.");
         }
     }
+
+    public void handleDeleteAllUsersConfirmation() {
+        if (inputHandler.confirmYesNo("Tem certeza que deseja excluir TODOS os usuários?")) {
+            deleteAllUsers();
+        } else {
+            System.out.println("Operação cancelada.");
+        }
+    }
 }

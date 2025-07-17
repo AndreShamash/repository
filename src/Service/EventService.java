@@ -242,5 +242,4 @@ public class EventService {
 
         return names.isEmpty() ? "Nenhum" : String.join(", ", names);
     }
-
 }

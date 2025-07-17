@@ -240,6 +240,4 @@ public class Event {
                 idEvent, statusMessage, participantsMessage
         ).strip();
     }
-
-
 }
